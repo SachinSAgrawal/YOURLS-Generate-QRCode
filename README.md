@@ -31,10 +31,11 @@ All generation takes place locally in the browser, and changes update live.
 
 ## Installation
 1. In `/user/plugins`, create a new folder named `generate-qrcode`.
-2. Download the `plugin.php` file from this repository and add it to that folder.
-3. Go to the Plugins admin page (eg. `http://sho.rt/admin/plugins.php`) and activate it.
+2. Download the `plugin.php` and `qrcode.js` files from this repository.
+3. Add both files into the newly created directory.
+4. Go to the Plugins admin page (eg. `http://sho.rt/admin/plugins.php`) and activate it.
 
-Alternatively, this plugin is compatible with [Download Plugins](https://github.com/krissss/yourls-download-plugin), so copy and paste the URL of this repository, set the branch to be `main` and the name to be `generate-qrcode` to install it.
+Alternatively, this plugin is compatible with both [Download Plugins](https://github.com/krissss/yourls-download-plugin) and [Download Delete](https://github.com/SachinSAgrawal/YOURLS-Download-Delete), so copy and paste the URL of this repository and set the branch to be `main` to install it.
 
 ## Contributors
 Sachin Agrawal: I'm a self-taught programmer who knows many languages and I'm into app, game, and web development. For more information, check out my website or Github profile. If you would like to contact me, my email is [github@sachin.email](mailto:github@sachin.email).
