@@ -7,7 +7,7 @@ Developed for Your Own URL Shortener ([YOURLS](https://yourls.org)) `v1.10.4` an
 
 ![screenshot](screenshot.png)
 
-Check it out on my own website: [yourls-device-details.dreamhosters.com](https://yourls-device-details.dreamhosters.com/). <br>
+Check it out on my own website: [yourls.dreamhosters.com](https://yourls.dreamhosters.com/). <br>
 This plugin requires that the Sleeky frontend is installed, as this plugin injects code into the `index.php`.
 
 ## Usage
