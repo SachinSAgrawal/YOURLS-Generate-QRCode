@@ -1,4 +1,4 @@
-# Generate QR Code
+# Generate QR Code [![Listed in Awesome YOURLS!](https://img.shields.io/badge/Awesome-YOURLS-C5A3BE)](https://github.com/YOURLS/awesome-yourls/)
 
 This plugin is loosely inspired by alexkolodko's YOURLS Local QR Code. <br>
 Developed for Your Own URL Shortener ([YOURLS](https://yourls.org)) `v1.10.4` and above.
