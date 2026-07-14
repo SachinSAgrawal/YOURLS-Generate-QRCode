@@ -59,7 +59,7 @@ function qr_plugin_inject_shutdown() {
 
 function qr_plugin_print_scripts() {
     ?>
-    <script src="<?php echo yourls_plugin_url( dirname( __FILE__ ) ) . '/qrcode.js'; ?>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.5.2/qrcode.min.js" integrity="sha512-c3HC2N32Up+KwxhFN2dZkoDWSdxWqwzDJCnroUffjS/HBQHf5Ou1uFpqIT0rOIJ5fW8TxHmUpCDndH2A6xNhpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
     // Self-executing anonymous function runs immediately
     (function() {
