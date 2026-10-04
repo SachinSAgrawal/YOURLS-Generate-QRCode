@@ -3,7 +3,7 @@
 Plugin Name: Generate QR Code
 Plugin URI: https://github.com/SachinSAgrawal/YOURLS-Generate-QRCode
 Description: Shows a customizable QR code generator directly upon link generation and afterwards
-Version: 1.0
+Version: 1.1
 Author: Sachin Agrawal
 Author URI: https://sachinsagrawal.github.io/
 */
@@ -58,11 +58,20 @@ function qr_plugin_inject_shutdown() {
 }
 
 function qr_plugin_print_scripts() {
+    // Detect Ozh's Force Lowercase plugin, which makes short URLs case insensitive
+    $lower = function_exists( 'ozh_break_the_web_lowercase' ) && yourls_has_filter( 'get_request', 'ozh_break_the_web_lowercase' );
+
+    // Uppercase the scheme and host only, since a subdirectory install stays case sensitive
+    $base  = rtrim( YOURLS_SITE, '/' ) . '/';
+    $split = strpos( $base, '/', strpos( $base, '//' ) + 2 );
+    $case  = array( 'on' => $lower, 'base' => $base, 'upper' => strtoupper( substr( $base, 0, $split ) ) . substr( $base, $split ) );
     ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.5.2/qrcode.min.js" integrity="sha512-c3HC2N32Up+KwxhFN2dZkoDWSdxWqwzDJCnroUffjS/HBQHf5Ou1uFpqIT0rOIJ5fW8TxHmUpCDndH2A6xNhpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
     // Self-executing anonymous function runs immediately
     (function() {
+        const QR_CASE = <?php echo json_encode( $case ); ?>;
+
         const standaloneContainer = document.getElementById('qr-standalone-container');
         const copyButton = document.getElementById('copy-button');
 
@@ -131,6 +140,7 @@ function qr_plugin_print_scripts() {
                     }
                 </style>
                 <div id="qrcode-display" style="padding-bottom:20px; text-align:left;"></div>
+                <span class="info" id="qr-mode-note" style="display:block; text-align:left; padding-bottom:20px;"></span>
             `;
         } else {
             // Bootstrap grid layout for the main page
@@ -171,6 +181,19 @@ function qr_plugin_print_scripts() {
         const paddingSelect = document.getElementById('qr-padding');
         const displayDiv = document.getElementById('qrcode-display');
         const downloadBtn = document.getElementById('download-button');
+        const modeNote = document.getElementById('qr-mode-note');
+
+        // Uppercase the short URL when keywords are case insensitive, since alphanumeric mode is denser than byte mode
+        function qrPayload() {
+            const upper = QR_CASE.upper + shortUrl.slice(QR_CASE.base.length).toUpperCase();
+
+            // Require one of our own short URLs and a payload the alphanumeric charset fully covers
+            const usable = QR_CASE.on
+                && shortUrl.slice(0, QR_CASE.base.length).toLowerCase() === QR_CASE.base.toLowerCase()
+                && /^[0-9A-Z $%*+\-.\/:]+$/.test(upper);
+
+            return usable ? { data: upper, mode: 'Alphanumeric' } : { data: shortUrl, mode: 'Byte' };
+        }
 
         function generateQR() {
             try {
@@ -180,9 +203,13 @@ function qr_plugin_print_scripts() {
                 const res = parseInt(resolutionSelect.value, 10);
                 const pad = parseInt(paddingSelect.value, 10);
                 
+                const payload = qrPayload();
                 const qr = qrcode(version, ecc);
-                qr.addData(shortUrl);
+                qr.addData(payload.data, payload.mode);
                 qr.make();
+
+                // Report the uppercase rewrite so the encoded string is never a surprise
+                if (modeNote) modeNote.textContent = payload.mode === 'Alphanumeric' ? `Encoded as ${payload.data} in alphanumeric mode for a denser code` : '';
                 
                 const moduleCount = qr.getModuleCount();
                 const size = (moduleCount + pad * 2) * res;
@@ -233,6 +260,7 @@ function qr_plugin_print_scripts() {
                     displayDiv.innerHTML = `<img src="${dataURL}" style="max-width: 100%; height: auto;" />`;
                 }
             } catch (error) {
+                if (modeNote) modeNote.textContent = '';
                 displayDiv.innerHTML = `<span style="color:red; font-size: 0.9em;">Configuration failed:<br>${error}<br><br>Increase version or lower correction level.</span>`;
             }
         }

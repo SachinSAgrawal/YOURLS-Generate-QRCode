@@ -21,6 +21,8 @@ This will bring up a generation screen with the same options as before.
 
 All generation takes place locally in the browser, and changes update live.
 
+If Ozh's [Force Lowercase](https://github.com/YOURLS/force-lowercase) plugin is active, links are encoded in uppercase to fit QR alphanumeric mode, making for a denser code.
+
 ### Options
 
 * **Error Correction**: The level of data redundancy to restore damaged codes. Options are L (\~7%), M (\~15%), Q (\~25%), and H (\~30%). *Default: M*
